@@ -1,0 +1,178 @@
+/* Xrespect Lunar Skin for ox_inventory - UI only */
+:root {
+  --dopa-panel: rgba(53, 61, 72, 0.72);
+  --dopa-panel-soft: rgba(62, 72, 85, 0.48);
+  --dopa-border: rgba(189, 189, 189, 0.26);
+  --dopa-border-strong: rgba(189, 189, 189, 0.45);
+  --dopa-text: #BDBDBD;
+  --dopa-text-soft: #BDBDBD;
+  --dopa-chip: rgba(16, 21, 30, 0.76);
+}
+
+html, body, #root {
+  background: transparent !important;
+}
+
+body {
+  font-family: Inter, Segoe UI, Roboto, sans-serif !important;
+}
+
+.app-wrapper {
+  background: transparent !important;
+  color: var(--dopa-text) !important;
+}
+
+.inventory-wrapper {
+  gap: 24px !important;
+  align-items: center !important;
+}
+
+.inventory-grid-wrapper {
+  background: linear-gradient(180deg, rgba(56, 64, 76, 0.72), rgba(41, 49, 60, 0.72)) !important;
+  border: 1px solid var(--dopa-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22) !important;
+  padding: 10px !important;
+  gap: 8px !important;
+}
+
+.inventory-grid-header-wrapper p {
+  color: var(--dopa-text) !important;
+  font-size: 1.75vh !important;
+  font-weight: 700 !important;
+}
+
+.weight-bar {
+  height: 6px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+.weight-bar > div {
+  border-radius: 999px !important;
+}
+
+.inventory-grid-container {
+  gap: 6px !important;
+}
+
+.inventory-slot,
+.hotbar-item-slot,
+.item-notification-item-box {
+  border-radius: 12px !important;
+  border: 1px solid rgba(170, 188, 211, 0.28) !important;
+  background: linear-gradient(135deg, rgba(89, 101, 118, 0.44), rgba(66, 76, 91, 0.58)) !important;
+  box-shadow: none !important;
+}
+
+.inventory-slot:hover,
+.hotbar-item-slot:hover {
+  border-color: var(--dopa-border-strong) !important;
+  background: linear-gradient(135deg, rgba(100, 112, 130, 0.52), rgba(75, 85, 102, 0.64)) !important;
+  transform: none !important;
+}
+
+.inventory-slot-number {
+  background: var(--dopa-chip) !important;
+  color: var(--dopa-text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 7px !important;
+  height: auto !important;
+  line-height: 1 !important;
+  padding: 2px 5px !important;
+}
+
+.inventory-slot-label-box {
+  background: rgba(14, 19, 27, 0.68) !important;
+  color: var(--dopa-text-soft) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.item-slot-info-wrapper p,
+.item-slot-price-wrapper p,
+.item-slot-currency-wrapper p {
+  color: var(--dopa-text) !important;
+  text-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+.inventory-control {
+  align-items: center !important;
+}
+
+.inventory-control .inventory-control-wrapper {
+  background: linear-gradient(180deg, rgba(56, 64, 76, 0.74), rgba(42, 50, 61, 0.75)) !important;
+  border: 1px solid rgba(186, 202, 222, 0.26) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22) !important;
+  padding: 8px !important;
+  gap: 8px !important;
+}
+
+.inventory-control .inventory-control-input,
+.inventory-control .inventory-control-button {
+  background: rgba(17, 23, 32, 0.58) !important;
+  border: 1px solid rgba(176, 193, 214, 0.26) !important;
+  color: var(--dopa-text) !important;
+  border-radius: 10px !important;
+}
+
+.inventory-control .inventory-control-button:hover,
+.inventory-control .inventory-control-input:focus-within {
+  background: rgba(24, 31, 42, 0.72) !important;
+  border-color: rgba(207, 223, 243, 0.36) !important;
+}
+
+.context-menu-list,
+.tooltip-wrapper,
+.useful-controls-dialog {
+  background: rgba(28, 35, 46, 0.92) !important;
+  border: 1px solid rgba(198, 214, 233, 0.22) !important;
+  color: var(--dopa-text) !important;
+}
+
+.useful-controls-dialog-overlay {
+  background: transparent !important;
+}
+
+/* Slight upscale requested (keep functional ox UI) */
+.inventory-grid-container {
+  height: calc(56.8vh + 10px) !important;
+  grid-template-columns: repeat(5, 11vh) !important;
+  grid-auto-rows: 11vh !important;
+}
+
+.inventory-slot,
+.hotbar-item-slot,
+.item-notification-item-box {
+  background-size: 7.6vh !important;
+}
+
+.item-drag-preview {
+  width: 8.3vh !important;
+  height: 8.3vh !important;
+  background-size: 7.6vh !important;
+}
+
+.inventory-wrapper {
+  gap: 26px !important;
+}
+
+/* Hard transparency fix for FiveM NUI */
+html,
+body,
+#root,
+.app-wrapper,
+.inventory-wrapper {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.MuiBackdrop-root,
+.useful-controls-dialog-overlay,
+[class*='Backdrop'] {
+  background-color: transparent !important;
+  background: transparent !important;
+}

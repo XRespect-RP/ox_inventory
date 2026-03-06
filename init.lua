@@ -15,7 +15,7 @@ end
 shared = {
     resource = GetCurrentResourceName(),
     framework = GetConvar('inventory:framework', 'esx'),
-    playerslots = GetConvarInt('inventory:slots', 50),
+    playerslots = GetConvarInt('inventory:slots', 35),
     playerweight = GetConvarInt('inventory:weight', 30000),
     target = GetConvarInt('inventory:target', 0) == 1,
     police = json.decode(GetConvar('inventory:police', '["police", "sheriff"]')),
@@ -103,6 +103,20 @@ else
         local weapon = client.ignoreweapons[i]
         ignoreweapons[tonumber(weapon) or joaat(weapon)] = true
     end
+
+    -- Always ignore paintball weapons so temporary event weapons are not auto-disarmed by mismatch checks.
+    ignoreweapons[`WEAPON_COMBATPISTOL`] = true
+    ignoreweapons[`WEAPON_APPISTOL`] = true
+    ignoreweapons[`WEAPON_PISTOL_MK2`] = true
+    ignoreweapons[`WEAPON_COMBATPDW`] = true
+    ignoreweapons[`WEAPON_TACTICALRIFLE`] = true
+    -- xrv2_pvp custom/selected weapons
+    ignoreweapons[`WEAPON_TGLOCK19`] = true
+    ignoreweapons[`WEAPON_WOARP`] = true
+    ignoreweapons[`WEAPON_PD870`] = true
+    ignoreweapons[`WEAPON_PDG19`] = true
+    ignoreweapons[`WEAPON_PISTOL50`] = true
+    ignoreweapons[`WEAPON_PISTOL`] = true
 
     ignoreweapons[`WEAPON_UNARMED`] = true
     ignoreweapons[`WEAPON_HANDCUFFS`] = true

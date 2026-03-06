@@ -30,6 +30,7 @@ local invBusy = true
 
 ---@type boolean?
 local invOpen = false
+local pauseBlockUntil = 0
 local plyState = LocalPlayer.state
 local IsPedCuffed = IsPedCuffed
 local playerPed = cache.ped
@@ -883,6 +884,7 @@ function client.closeInventory(server)
 
 	if invOpen then
 		invOpen = nil
+		pauseBlockUntil = GetGameTimer() + 300
 		SetNuiFocus(false, false)
 		SetNuiFocusKeepInput(false)
 		Utils.blurOut()
@@ -1456,6 +1458,12 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 				EnableControlAction(0, 31, true)
 			end
 		else
+			if pauseBlockUntil > GetGameTimer() then
+				DisableControlAction(0, 200, true) -- INPUT_FRONTEND_PAUSE
+				DisableControlAction(0, 199, true) -- INPUT_FRONTEND_PAUSE_ALTERNATE
+				DisableControlAction(0, 322, true) -- INPUT_REPLAY_START_STOP_RECORDING_SECONDARY / ESC fallback
+			end
+
 			if invBusy then
 				DisableControlAction(0, 23, true)
 				DisableControlAction(0, 36, true)
@@ -1676,8 +1684,12 @@ local function giveItemToTarget(serverId, slotId, count)
     local notification = lib.callback.await('ox_inventory:giveItem', false, slotId, serverId, count or 0)
 
     if notification then
-        lib.notify({ type = 'error', description = locale(table.unpack(notification)) })
+        local description = locale(table.unpack(notification))
+        lib.notify({ type = 'error', description = description })
+        return false, description
     end
+
+    return true
 end
 
 exports('giveItemToTarget', giveItemToTarget)
@@ -1691,6 +1703,102 @@ local function isGiveTargetValid(ped, coords)
 
     return entity == ped and IsEntityVisible(ped)
 end
+
+local function getAvailableGiveTargets()
+    local playerCoords = GetEntityCoords(playerPed)
+    local nearbyPlayers = lib.getNearbyPlayers(playerCoords, 3.0)
+    local giveList, n = {}, 0
+
+    for i = 1, #nearbyPlayers do
+        local option = nearbyPlayers[i]
+
+        if isGiveTargetValid(option.ped, option.coords) then
+            local serverId = GetPlayerServerId(option.id)
+            local playerName = GetPlayerName(option.id) or ('Player %s'):format(serverId)
+
+            n += 1
+            giveList[n] = {
+                id = serverId,
+                label = ('[%s] %s'):format(serverId, playerName),
+                distance = #(playerCoords - option.coords)
+            }
+        end
+    end
+
+    table.sort(giveList, function(a, b)
+        if a.distance == b.distance then
+            return a.id < b.id
+        end
+
+        return a.distance < b.distance
+    end)
+
+    return giveList
+end
+
+RegisterNUICallback('getGiveTargets', function(_, cb)
+    if usingItem then
+        return cb({
+            success = false,
+            targets = {},
+            message = locale('inventory_player_access')
+        })
+    end
+
+    cb({
+        success = true,
+        targets = getAvailableGiveTargets()
+    })
+end)
+
+RegisterNUICallback('giveItemToTargetId', function(data, cb)
+    if usingItem then
+        return cb({
+            success = false,
+            message = locale('inventory_player_access')
+        })
+    end
+
+    if type(data) ~= 'table' then
+        return cb({
+            success = false,
+            message = locale('nobody_nearby')
+        })
+    end
+
+    local slotId = tonumber(data.slot)
+    local targetId = tonumber(data.targetId)
+    local count = tonumber(data.count) or 0
+
+    if not slotId or not targetId then
+        return cb({
+            success = false,
+            message = locale('nobody_nearby')
+        })
+    end
+
+    slotId = math.floor(slotId)
+    targetId = math.floor(targetId)
+    count = math.max(0, math.floor(count))
+
+    local giveList = getAvailableGiveTargets()
+
+    for i = 1, #giveList do
+        if giveList[i].id == targetId then
+            local success, message = giveItemToTarget(targetId, slotId, count)
+
+            return cb({
+                success = success,
+                message = message
+            })
+        end
+    end
+
+    cb({
+        success = false,
+        message = locale('nobody_nearby')
+    })
+end)
 
 RegisterNUICallback('giveItem', function(data, cb)
 	cb(1)
